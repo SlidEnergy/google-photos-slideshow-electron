@@ -156,37 +156,37 @@ function addPhotos(photos) {
 	var slides = document.getElementsByClassName('slides')[0];
 	slides.innerHTML = "";
 
-	photos.sort(function() {
+	photos = photos.sort(function() {
 		return .5 - Math.random();
-	})
-	.forEach(photo => {
-		photo.div = addPhoto(slides, photo);
-	}, this);
+	});
 
-	if(photos.length > 0) {
-		var img = preload(photos[0]);
-		//img.addEventListener('load', () => slideshow(photos))
-		slideshow(photos);
-		//w3.slideshow(".slide", 5000);
+	var firstPhoto = addPhoto(slides, photos[0]);
+	addPhoto(slides, photos[1]);
+
+	if(photos.length > 1) {
+		firstPhoto.style.display ='block';
+		setTimeout(() => slideshow(photos), 5000, photos);
 	}
 }
 
 function addPhoto(slides, photo) {
+	var img = preload(photo);
+
 	if(photo.title.endsWith(".mp4")) {
-		var source = document.createElement('source');
-		//source.src = photo.content.src;
+
 		var video = document.createElement('video');
-		//video.className = 'slide';
+		video.className = 'slide';
 		video.style.display = 'none';
-		video.appendChild(source);
+		// get last element with better resolution
+		video.src = photo.media.media$content.reverse().find((x) => x.medium == 'video').url;
 		slides.appendChild(video);
 
 		return video;
 	}
 	else {
 		var image = document.createElement('img');
-		//image.src = photo.content.src;
-		//image.className = 'slide';
+		image.src = photo.content.src;
+		image.className = 'slide';
 		image.style.display = 'none';
 		slides.appendChild(image);
 
@@ -198,20 +198,31 @@ var slideIndex = 0;
 
 function slideshow(photos) {
 
-	if(slideIndex > 0)
-		photos[slideIndex-1].div.style.display = 'none';
-
 	slideIndex++;
 
 	if(slideIndex > photos.length)
-		slideIndex = 1;
-	if(photos[slideIndex-1].title.endsWith(".mp4"))
-		photos[slideIndex-1].div.source.src = photos[slideIndex-1].content.src;
-	else
-		photos[slideIndex-1].div.src = photos[slideIndex-1].content.src;
-	photos[slideIndex-1].div.style.display = 'block';
+		slideIndex = 0;
 
-	preload(photos[slideIndex]);
+	var slideContainer = document.getElementsByClassName('slides')[0];
+	
+	var slides = document.getElementsByClassName('slide');
+
+	if(slides.length < 2)
+		throw Error("Количество слайдов меньше 2");
+
+	slideContainer.removeChild(slides[0]);
+	// next slide
+	slides[0].style.display = 'block';
+
+	if(photos[slideIndex].title.endsWith(".mp4")) {
+		slides[0].play();
+		return;
+	}
+	
+	if(slideIndex + 1 > photos.length)
+		addPhoto(slideContainer, photos[0]);
+	else
+		addPhoto(slideContainer, photos[slideIndex + 1]);
 
 	setTimeout(() => slideshow(photos), 5000, photos);
 }
