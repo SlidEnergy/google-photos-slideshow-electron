@@ -214,10 +214,8 @@ function slideshow(photos) {
 	// next slide
 	slides[0].style.display = 'block';
 
-	if(photos[slideIndex].title.endsWith(".mp4")) {
+	if(photos[slideIndex].title.endsWith(".mp4"))
 		slides[0].play();
-		return;
-	}
 	
 	if(slideIndex + 1 > photos.length)
 		addPhoto(slideContainer, photos[0]);
