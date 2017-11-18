@@ -135,7 +135,7 @@ function getPhotos(accessToken) {
     
 	console.log('accessToken: ', accessToken);
 	
-    picasa.getPhotos(accessToken, { imgmax: 'd', maxResults: 999999}, (err, photos) => {
+    picasa.getPhotos(accessToken, { imgmax: 1280, maxResults: 999999}, (err, photos) => {
          if (err) {
             console.log('The API returned an error: ' + err, err);
             return;
