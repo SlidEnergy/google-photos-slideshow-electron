@@ -12,7 +12,7 @@
     "dist": "electron-builder"
   },
   "dependencies": {
-    "express": "^4.15.4",
+    "express": "^4.17.3",
     "fs": "0.0.1-security",
     "google-auth-library": "^0.10.0",
     "googleapis": "^21.3.0",
